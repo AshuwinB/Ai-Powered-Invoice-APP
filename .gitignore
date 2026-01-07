@@ -1,0 +1,62 @@
+# ============================
+# Backend (Root Directory)
+# ============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env Variables (Backend)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+log.*
+debug.log
+
+# Backend Build / Cache
+dist/
+build/
+.cache/
+
+# ============================
+# Frontend (React + Tailwind)
+# ============================
+client/node_modules/
+client/build/
+client/.env
+client/.DS_Store
+
+# Tailwind cache
+client/.vite/
+client/.parcel-cache/
+client/.turbo/
+client/.next/
+client/.cache/
+
+# PostCSS / Other Tools
+*.cache/
+
+# ============================
+# System & Editor Files
+# ============================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ============================
+# Optional Project-Specific
+# ============================
+uploads/
+temp/
+tmp/
+coverage/
