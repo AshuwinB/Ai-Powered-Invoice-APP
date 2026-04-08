@@ -1,1 +1,34 @@
-@import "tailwindcss";
+.app-shell {
+	position: relative;
+}
+
+.app-shell::before,
+.app-shell::after {
+	content: "";
+	position: fixed;
+	pointer-events: none;
+	z-index: 0;
+	border-radius: 999px;
+	filter: blur(42px);
+}
+
+.app-shell::before {
+	top: -80px;
+	right: -80px;
+	width: 260px;
+	height: 260px;
+	background: rgba(15, 118, 110, 0.16);
+}
+
+.app-shell::after {
+	bottom: -90px;
+	left: -70px;
+	width: 280px;
+	height: 280px;
+	background: rgba(249, 115, 22, 0.14);
+}
+
+.app-shell > * {
+	position: relative;
+	z-index: 1;
+}

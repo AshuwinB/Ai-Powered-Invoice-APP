@@ -1,6 +1,36 @@
 const { Router } = require("express");
 const passport = require('passport');
-const { register, login, authStatus, logout, setup2FA, verify2FA, reset2FA } = require("../controllers/authController");
+const {
+  register,
+  login,
+  authStatus,
+  logout,
+  setup2FA,
+  verify2FA,
+  reset2FA,
+  skip2FAOnboarding,
+  shouldRequireLoginApproval,
+  createLoginApprovalChallenge,
+  getPendingLoginApprovals,
+  approvePendingLogin,
+  rejectPendingLogin,
+  getLoginChallengeStatus,
+  completeApprovedLogin,
+  getActiveDevices,
+  logoutDevice,
+  logoutOtherDevices,
+  streamChallengeStatus,
+  getActivityLogs,
+  getAccountProfile,
+  updateAccountProfile,
+  requestEmailOtp,
+  verifyEmailOtp,
+  requestPhoneOtp,
+  verifyPhoneOtp,
+  changeAccountPassword,
+  getNotificationPreferences,
+  updateNotificationPreferences,
+} = require("../controllers/authController");
 
 
 const router = Router();
@@ -20,12 +50,22 @@ router.post('/login', (req, res, next) => {
       });
     }
 
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      return login(req, res);
-    });
+    (async () => {
+      const needsApproval = await shouldRequireLoginApproval(req, user);
+      if (needsApproval) {
+        return createLoginApprovalChallenge(req, res, user);
+      }
+
+      req.logIn(user, (logInError) => {
+        if (logInError) return next(logInError);
+        return login(req, res);
+      });
+    })().catch(next);
   })(req, res, next);
 });
+router.post('/login/challenge-status', getLoginChallengeStatus);
+router.post('/login/complete-challenge', completeApprovedLogin);
+router.get('/login/challenge-stream/:challengeId', streamChallengeStatus);
 // router.post('/login', passport.authenticate('local'), login);
 router.get('/status', authStatus);
 router.post('/logout', logout);
@@ -47,5 +87,123 @@ router.post('/2fa/reset', (req, res, next) => {
     }
     res.status(401).json({ message: 'Unauthorized user' });
 },reset2FA);
+router.post('/2fa/skip-onboarding', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, skip2FAOnboarding);
+
+router.get('/security/pending-logins', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, getPendingLoginApprovals);
+
+router.post('/security/approve-login', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, approvePendingLogin);
+
+router.post('/security/reject-login', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, rejectPendingLogin);
+
+router.get('/security/devices', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, getActiveDevices);
+
+router.delete('/security/devices/:id', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, logoutDevice);
+
+router.post('/security/logout-others', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, logoutOtherDevices);
+
+router.get('/security/logs', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, getActivityLogs);
+
+router.get('/account/profile', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, getAccountProfile);
+
+router.put('/account/profile', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, updateAccountProfile);
+
+router.post('/account/email/request-otp', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, requestEmailOtp);
+
+router.post('/account/email/verify-otp', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, verifyEmailOtp);
+
+router.post('/account/phone/request-otp', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, requestPhoneOtp);
+
+router.post('/account/phone/verify-otp', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, verifyPhoneOtp);
+
+router.put('/account/password', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, changeAccountPassword);
+
+router.get('/account/notification-preferences', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, getNotificationPreferences);
+
+router.put('/account/notification-preferences', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized user' });
+}, updateNotificationPreferences);
 
 module.exports = router;

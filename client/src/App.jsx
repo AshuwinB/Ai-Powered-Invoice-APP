@@ -8,14 +8,12 @@ function App() {
 
   return (
     <>
-      <div className="bg-slate-100 h-screen">
-        <div className='flex justify-center items-center h-screen'>
-          <SessionProvider>
-          <RouterProvider 
+      <div className="app-shell min-h-screen">
+        <SessionProvider>
+          <RouterProvider
             router={router}
           />
-          </SessionProvider>
-        </div>
+        </SessionProvider>
       </div>
     </>
   )
